@@ -1,6 +1,7 @@
 import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { Model } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
+import { PostDTOSchema } from './post.dto';
 
 @Injectable()
 export class PostsService {
@@ -14,7 +15,7 @@ export class PostsService {
     return await this.postModel.findById(id).exec();
   }
 
-  async createPost(postData: any): Promise<any> {
+  async createPost(postData: typeof PostDTOSchema): Promise<any> {
     try {
       const createdPost = new this.postModel(postData);
       return await createdPost.save();
@@ -25,9 +26,13 @@ export class PostsService {
 
   async updatePost(id: string, postData: any): Promise<any | null> {
     // Implementa el método de actualización si es necesario
+    const updated = await this.postModel.findByIdAndUpdate(id, postData)
   }
 
   async deletePost(id: string): Promise<void> {
     // Implementa el método de eliminación si es necesario
+
+    const deleted = await this.postModel.findByIdAndDelete(id);
+    return deleted;
   }
 }
